@@ -6,7 +6,8 @@ clear all
 cap log close
 set more off
 
-cd ""
+* set your directory below
+cd "~/Desktop/sentiment"
 
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 * 1. Create Sheet 1 (README)                                                  *
@@ -17,7 +18,6 @@ putexcel A1 = "INVESTOR SENTIMENT DATA"
 putexcel A1, bold
 
 putexcel A2 = "GENERAL NOTES"
-
 putexcel A3 = "UPDATED: May 31, 2024"
 
 putexcel A5 = "Data are generally as used and described in Baker and Wurgler, 'Investor Sentiment and the Cross-Section of Stock Returns,' Journal of Finance vol. 61, August 2006, p.1645-1680."
@@ -96,11 +96,11 @@ putexcel B35 = "Nominal services consumption; we provide monthly data here; the 
 putexcel A36 = "recess"
 putexcel B36 = "NBER recession indicator"
 
-putexcel A36 = "employ"
-putexcel B36 = "Employment; we provide monthly data here; the orthogonalized index uses growth over the t-12 value"
+putexcel A37 = "employ"
+putexcel B37 = "Employment; we provide monthly data here; the orthogonalized index uses growth over the t-12 value"
 
-putexcel A36 = "cpi"
-putexcel B36 = "Consumer price index"
+putexcel A38 = "cpi"
+putexcel B38 = "Consumer price index"
 
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 * 2. Create Sheet 2 (DATA)                                                    *
@@ -110,10 +110,68 @@ insheet using "2024 Sentiment Proxy Variables.csv", comma clear
 merge 1:1 yearmo using macro_var.dta
 drop _merge
 
+* for ipo variables 
+destring ripo, replace force
+
 merge 1:1 yearmo using baker-wurgler-sentiment.dta
 drop _merge
 
 
-export excel yearmo SENT SENT_ORTH pdnd ripo nipo cefd s indpro consdur consnon consserv recess employ cpi using "SENTIMENT.xlsx", sheet("DATA") sheetreplace keepcellfmt
+** Note: Choose either 2-1 or 2-2 below
+
+
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+* 2-1. Export the whole database (faster)                                     *
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+
+** export the entire database in the second sheet labelled "DATA"
+
+*export excel yearmo SENT SENT_ORTH pdnd ripo nipo cefd s indpro consdur consnon consserv recess employ cpi using "SENTIMENT.xlsx", sheet("DATA") sheetreplace firstrow(variables) keepcellfmt
+
+
+
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+* 2-2. Export with customization (slower but useful sometimes)                *
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+
+** same as 2-1, but user-specified command can go here, 
+** such as highlighting specific rows with color
+
+putexcel set "SENTIMENT.xlsx", sheet("DATA") modify
+
+putexcel A1 = "yearmo"
+putexcel B1 = "SENT"
+putexcel C1 = "SENT_ORTH"
+putexcel D1 = "pdnd"
+putexcel E1 = "ripo"
+putexcel F1 = "nipo"
+putexcel G1 = "cefd"
+putexcel H1 = "s"
+putexcel I1 = "indpro"
+putexcel J1 = "consdur"
+putexcel K1 = "consnon"
+putexcel L1 = "consserv"
+putexcel M1 = "recess"
+putexcel N1 = "employ"
+putexcel O1 = "cpi"
+
+** Loop through the data and write each cell
+** this will take longer than exporting the entire database, 
+** but comes with a handy setting to customize each cell
+
+qui forvalues i = 1/`=_N' {
+	
+	local row = `i' + 1 // increase by one since first row is header
+    
+	** rows 760 - 764 are colored red
+	if `row' >= 760 & `row' <=764 {
+		putexcel A`row' = yearmo[`i'] B`row' = SENT[`i'] C`row' = SENT_ORTH[`i'] D`row' = pdnd[`i'] E`row' = ripo[`i'] F`row' = nipo[`i'] G`row' = cefd[`i'] H`row' = s[`i'] I`row' = indpro[`i'] J`row' = consdur[`i'] K`row' = consnon[`i'] L`row' = consserv[`i'] M`row' = recess[`i'] N`row' = employ[`i'] O`row' = cpi[`i'] , font("", "", "red")
+     }
+     
+	** for all other rows, just print them in the sheet 
+	else {
+		putexcel A`row' = yearmo[`i'] B`row' = SENT[`i'] C`row' = SENT_ORTH[`i'] D`row' = pdnd[`i'] E`row' = ripo[`i'] F`row' = nipo[`i'] G`row' = cefd[`i'] H`row' = s[`i'] I`row' = indpro[`i'] J`row' = consdur[`i'] K`row' = consnon[`i'] L`row' = consserv[`i'] M`row' = recess[`i'] N`row' = employ[`i'] O`row' = cpi[`i']
+		}
+}
 
 

@@ -3,7 +3,7 @@
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 
 * this STATA code requires two datasets, 
-* "macro_var.dta" that you created through "0. Download Macro Data.do"; and 
+* "macro_var.dta" that you created through "1. Download Macro Data.do"; and 
 * "2024 Sentiment Proxy Variables.csv" that contains five sentiment proxies (hand-collected)
 
 clear all
@@ -11,9 +11,12 @@ cap log close
 set more off
 
 * set your directory below
-cd ""
+cd "~/Desktop/sentiment"
 
-** load the sentiment proxies dataset, and merge it with "macro_var.dta"
+
+* load the sentiment proxies dataset, and merge it with 
+* "macro_var.dta" that we created in "1. Download Macro Data.do"
+
 insheet using "2024 Sentiment Proxy Variables.csv", comma clear
 merge 1:1 yearmo using macro_var.dta
 drop _merge
@@ -29,12 +32,13 @@ gen mo = (year-1960)*12+(yearmo-year*100)
 	
 cap destring ripo, force replace	
 	
-* indpro, consdur, consnon, consserv, recess, employ 중에서 indpor, employ 두개만
+* modify macro variables to change from year ago
+* indpro, employ 
 foreach varname of varlist indpro employ {	
 	gen g`varname' = `varname'/`varname'[_n-12]-1
 	gen g`varname'1 = g`varname'[_n-12]
 }	
-* indpro, consdur, consnon, consserv, recess, employ 중에서 남은 세개
+* consdur, consnon, consserv (adjust for inflation using cpi)
 foreach varname of varlist consdur consnon consserv {	
 	gen g`varname' = (`varname'/`varname'[_n-12])/(cpi/cpi[_n-12])-1
 	gen g`varname'1 = g`varname'[_n-12]
@@ -45,8 +49,6 @@ capture tsset mo
 sort mo	
 	
 * Define monthly equivalents to annual variables	
-
-* row element 하나하나 누적합산
 gen nipo_sum = sum(nipo) 	
 gen nipo_am = nipo_sum - nipo_sum[_n-12] if nipo~=.&nipo[_n-11]~=.	
 replace nipo_am = nipo_sum if nipo~=.&nipo[_n-11]~=.&nipo[_n-12]==.	
@@ -74,7 +76,8 @@ replace nipo = nipo_am
 drop *_sum nipo_am ripo_am	
 	
 sort mo	
-	
+
+* create macroeconomics-orthogonalized components
 foreach varname of varlist pdnd ripo ripom {	
 	gen raw_lag`varname' = `varname'[_n-12]
 	egen sraw_lag`varname' = std(raw_lag`varname') if yearmo>=`1' & yearmo<=`2'
@@ -90,7 +93,8 @@ foreach varname of varlist nipo cef s pdnd ripo nipom ripom {
 	predict e_`varname', resid
 	egen se_`varname' = std(e_`varname') if yearmo>=`1' & yearmo<=`2'
 }	
-	
+
+* run PCA on five sentiment proxy variables
 foreach type in raw_ e_ {	
 	pca `type'cef `type'nipo `type'lagripo `type'lagpdnd `type's if yearmo>=`1' & yearmo<=`2'
 	predict `type'f2 if yearmo>=`1' & yearmo<=`2'
@@ -127,7 +131,6 @@ end
 *NOTE: INSPECT OUTPUT IN CASE PCA YIELDS NEGATIVE OF SENTIMENT	
 	
 sentmo 196507 202312
-
 
 
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
