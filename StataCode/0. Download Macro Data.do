@@ -7,23 +7,45 @@ cap log close
 set more off
 
 * set your directory below
-cd "~/Desktop/sentiment"
+//cd "~/Desktop/sentiment"
+local year 2025 //Update to CURRENT year
+local yearmin1 = `year'-1 
+local enddate `yearmin1'12
+
+di `yearmin1'
+di `enddate'
+
+cd "C:\Users\dmangoubi\OneDrive - Harvard Business School\Daniel Projects\Sentiment Index\Data for `year'" //UPDATE TO YOUR FILE PATH
+
 
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 * 1. Download Macro variables from FRED                                       *
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 
+
+*** SET API KEY ***
 * you will need to visit 
 * https://fred.stlouisfed.org/docs/api/api_key.html
 * and obtain your key (free) to login to the FRED database
 
-set fredkey "your_fredkey_goes_here", permanently
+//set fredkey "YOUR API KEY HERE", permanently
 
 * for example,
-* set fredkey "a1b2c3d4e5f6", permanently
+* set fredkey "abc123abc123", permanently
+
+
+* Alternatively, keep API key in a .txt file and load it in 
+file open mykeyfile using "C:\Users\dmangoubi\Documents\APIKEYS\FRED.txt", read text
+file read mykeyfile line
+file close mykeyfile
+
+local fredkey_local `"`line'"'
+
+set fredkey "`fredkey_local'", permanently
+
 
 ** load six macro variables 
-import fred INDPRO PCEDG PCEND PCES PAYEMS CPIAUCSL 
+import fred INDPRO PCEDG PCEND PCES PAYEMS CPIAUCSL USREC, clear 
 
 * industrial production, consumer durables, consumer nondurables, 
 * consumer service, employment, cpi (for price level adjustment)
@@ -33,21 +55,16 @@ rename PCEND consnon
 rename PCES consserv
 rename PAYEMS employ
 rename CPIAUCSL cpi
+rename USREC recess //NBER recession data directly pulled from FRED
 
 gen year = year(daten)
 gen month = month(daten)
 gen yearmo = year*100 + month
 
 * we don't need data prior to 1958
-drop if yearmo < 195801 | yearmo > 202312
+di `enddate'
+drop if yearmo < 195801 | yearmo > `enddate'
 
-* monthly NBER recession coded as 1
-* the latest NBER recession is 2020 COVID shock
-* please update accordingly
-
-generate recess = 0
-replace recess = 1 if (yearmo >= 195801 & yearmo <= 195804) | (yearmo >= 196004 & yearmo <= 196102) | (yearmo >= 196912 & yearmo <= 197011) | (yearmo >= 197311 & yearmo <= 197503) | (yearmo >= 198001 & yearmo <= 198007) | (yearmo >= 198107 & yearmo <= 198211) | (yearmo >= 199007 & yearmo <= 199103) | (yearmo >= 200103 & yearmo <= 200111) | (yearmo >= 200712 & yearmo <= 200906) | (yearmo >= 202002 & yearmo <= 202004)
-	
 
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 * 2. Save as "macro_var.dta"                                                  *

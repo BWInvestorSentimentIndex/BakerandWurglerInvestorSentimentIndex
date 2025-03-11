@@ -1,28 +1,33 @@
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-* 0. README                                                                   *
+**# 0. README                                                                   *
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 
 * this STATA code requires two datasets, 
 * "macro_var.dta" that you created through "1. Download Macro Data.do"; and 
-* "2024 Sentiment Proxy Variables.csv" that contains five sentiment proxies (hand-collected)
+* "All sources for 2025.xlsx" that contains five sentiment proxies (hand-collected). Use Sheet 'Collected Data'
 
 clear all
 cap log close
 set more off
 
 * set your directory below
-cd "~/Desktop/sentiment"
+local year 2025
+local yearmin1 = `year'-1
+cd "C:\Users\dmangoubi\OneDrive - Harvard Business School\Daniel Projects\Sentiment Index\Data for `year'"
 
 
 * load the sentiment proxies dataset, and merge it with 
 * "macro_var.dta" that we created in "1. Download Macro Data.do"
+import excel "All sources for 2025.xlsx", sheet("Collected Data") first clear
+list in 505/510
 
-insheet using "2024 Sentiment Proxy Variables.csv", comma clear
 merge 1:1 yearmo using macro_var.dta
+assert _merge ==3
 drop _merge
 
+
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-* 1. Create Baker-Wurgler Sentiment                                           *
+**# 1. Create Baker-Wurgler Sentiment                                           *
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 
 program define sentmo	
@@ -130,11 +135,11 @@ twoway line SENT SENT_ORTH yearfrac if yearmo>=196507, xtitle("") xlabel(1965(5)
 end	
 *NOTE: INSPECT OUTPUT IN CASE PCA YIELDS NEGATIVE OF SENTIMENT	
 	
-sentmo 196507 202312
+sentmo 196507 `yearmin1'12
 
 
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-* 2. Save the file                                                            *
+**# 2. Save the file                                                            *
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 
 drop raw* e* yearfrac

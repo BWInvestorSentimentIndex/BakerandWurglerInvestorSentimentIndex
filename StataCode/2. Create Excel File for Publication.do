@@ -5,20 +5,22 @@
 clear all
 cap log close
 set more off
+local year 2025
 
 * set your directory below
-cd "~/Desktop/sentiment"
+cd "C:\Users\dmangoubi\OneDrive - Harvard Business School\Daniel Projects\Sentiment Index\Data for `year'"
+
 
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 * 1. Create Sheet 1 (README)                                                  *
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 
-putexcel set "SENTIMENT.xlsx", sheet("README")
+putexcel set "SENTIMENT_`year'.xlsx", sheet("README") replace
 putexcel A1 = "INVESTOR SENTIMENT DATA"
 putexcel A1, bold
 
 putexcel A2 = "GENERAL NOTES"
-putexcel A3 = "UPDATED: May 31, 2024"
+putexcel A3 = "UPDATED: May 31, `year'"
 
 putexcel A5 = "Data are generally as used and described in Baker and Wurgler, 'Investor Sentiment and the Cross-Section of Stock Returns,' Journal of Finance vol. 61, August 2006, p.1645-1680."
 
@@ -106,7 +108,7 @@ putexcel B38 = "Consumer price index"
 * 2. Create Sheet 2 (DATA)                                                    *
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 
-insheet using "2024 Sentiment Proxy Variables.csv", comma clear
+import excel "All sources for 2025.xlsx", sheet("Collected Data") first clear
 merge 1:1 yearmo using macro_var.dta
 drop _merge
 
@@ -137,7 +139,7 @@ drop _merge
 ** same as 2-1, but user-specified command can go here, 
 ** such as highlighting specific rows with color
 
-putexcel set "SENTIMENT.xlsx", sheet("DATA") modify
+putexcel set "SENTIMENT_`year'.xlsx", sheet("DATA") modify
 
 putexcel A1 = "yearmo"
 putexcel B1 = "SENT"
