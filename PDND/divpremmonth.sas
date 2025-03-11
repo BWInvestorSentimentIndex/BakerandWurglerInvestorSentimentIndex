@@ -12,7 +12,7 @@ Notes:
 	This is updaed code from 2022 for the Baker-Wurgler Sentiment Index.
 	It creates the "PDND" sentiment proxy and exports that. (PDND is used as input for other code to calculate the sentiment index)
 
-Daniel Mangoubi (updated code 5/9/2024)
+Daniel Mangoubi (updated code 5/9/2024; 3/11/2025)
 Dmangoubi@hbs.edu 
 -----------------------------------------------------------------------------------
 */
@@ -23,7 +23,7 @@ run;
 proc datasets library = work kill;
 run;
 quit;
-%let ldir = C:\Users\dmangoubi\OneDrive - Harvard Business School\Daniel Projects\Sentiment Index\Data for 2024\SAS Output;
+%let ldir = C:\Users\dmangoubi\OneDrive - Harvard Business School\Daniel Projects\Sentiment Index\Data for 2025\SAS Output;
 %let cees = &ldir.\EMPLOY_CPI_20210111.xlsx;
 %let premium = &ldir.\premium_20210111.xlsx;
 %let msia = &ldir.\NYSE_MSIA_20210111.xlsx;
@@ -489,7 +489,7 @@ quit;
 * filename cees url "https://download.bls.gov/pub/time.series/ce/ce.data.00a.TotalNonfarm.Employment";
 
 * DATA ORIGINALLY FROM HERE: https://download.bls.gov/pub/time.series/ce/ce.data.00a.TotalNonfarm.Employment ;
-filename cees "C:\Users\dmangoubi\OneDrive - Harvard Business School\Daniel Projects\Sentiment Index\Data for 2024\SAS Input\CES_Data.txt";
+filename cees "C:\Users\dmangoubi\OneDrive - Harvard Business School\Daniel Projects\Sentiment Index\Data for 2025\SAS Input\CES_Data.txt";
 data work.cees;
 infile cees lrecl = 120 dlm = '09'x pad missover firstobs = 2;
   length Series $16
@@ -516,7 +516,7 @@ proc freq data = work.cees;
 run;
 quit;
 * DATA ORIGINALLY FROM HERE: http://download.bls.gov/pub/time.series/cu/cu.data.1.AllItems ;
-filename cusr "C:\Users\dmangoubi\OneDrive - Harvard Business School\Daniel Projects\Sentiment Index\Data for 2024\SAS Input\CUSR_Data.txt";
+filename cusr "C:\Users\dmangoubi\OneDrive - Harvard Business School\Daniel Projects\Sentiment Index\Data for 2025\SAS Input\CUSR_Data.txt";
 data work.cusr;
 infile cusr lrecl = 120 dlm = '09'x pad missover firstobs = 2;
   length Series $16
