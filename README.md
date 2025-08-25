@@ -1,7 +1,6 @@
 # Investor Sentiment Index
 Code for Sentiment Index project
 
-<span style="color:red">This text is red</span>
 This repository contains the SAS and Stata code used to obtain data for and calculate the Baker-Wurgler Sentiment Index. See 'Investor Sentiment in the Stock Market,' Journal of Economic Perspectives vol. 21(2), Spring 2007, p. 129-152.
 
 Data are generally as used and described in Baker and Wurgler, 'Investor Sentiment and the Cross-Section of Stock Returns,' Journal of Finance vol. 61, August 2006, p.1645-1680.
