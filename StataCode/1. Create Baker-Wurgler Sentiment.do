@@ -40,6 +40,7 @@ cap destring ripo, force replace
 * modify macro variables to change from year ago
 * indpro, employ 
 foreach varname of varlist indpro employ {	
+	//Add changes here for average
 	gen g`varname' = `varname'/`varname'[_n-12]-1
 	gen g`varname'1 = g`varname'[_n-12]
 }	
