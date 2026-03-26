@@ -5,7 +5,7 @@
 clear all
 cap log close
 set more off
-local year 2025
+local year 2026
 
 * set your directory below
 cd "C:\Users\dmangoubi\OneDrive - Harvard Business School\Daniel Projects\Sentiment Index\Data for `year'"
@@ -108,7 +108,8 @@ putexcel B38 = "Consumer price index"
 * 2. Create Sheet 2 (DATA)                                                    *
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 
-import excel "All sources for 2025.xlsx", sheet("Collected Data") first clear
+import excel "All sources for `year'.xlsx", sheet("Collected Data") first clear
+drop if mi(yearmo)
 merge 1:1 yearmo using macro_var.dta
 drop _merge
 

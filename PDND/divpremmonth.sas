@@ -12,7 +12,7 @@ Notes:
 	This is updaed code from 2022 for the Baker-Wurgler Sentiment Index.
 	It creates the "PDND" sentiment proxy and exports that. (PDND is used as input for other code to calculate the sentiment index)
 
-Daniel Mangoubi (updated code 5/9/2024; 3/11/2025)
+Daniel Mangoubi (updated code 5/9/2024; 3/24/2026)
 Dmangoubi@hbs.edu 
 -----------------------------------------------------------------------------------
 */
@@ -23,7 +23,8 @@ run;
 proc datasets library = work kill;
 run;
 quit;
-%let ldir = C:\Users\dmangoubi\OneDrive - Harvard Business School\Daniel Projects\Sentiment Index\Data for 2025\SAS Output;
+
+%let ldir = C:\Users\dmangoubi\OneDrive - Harvard Business School\Daniel Projects\Sentiment Index\Data for 2026\SAS Output;
 %let cees = &ldir.\EMPLOY_CPI_20210111.xlsx;
 %let premium = &ldir.\premium_20210111.xlsx;
 %let msia = &ldir.\NYSE_MSIA_20210111.xlsx;
@@ -31,19 +32,22 @@ quit;
 %put &cees.;
 %put &premium.;
 %put &msia.;
+
 * %let cees = O:\Data\BRS\JZeitler\James\Afac\MBaker\InvestorSentiment\202012\EMPLOY_CPI_20210111.xlsx;
 * %let premium = O:\Data\BRS\JZeitler\James\Afac\MBaker\InvestorSentiment\202012\premium_20210111.xlsx;
 * %let msia = O:\Data\BRS\JZeitler\James\Afac\MBaker\InvestorSentiment\202012\NYSE_MSIA_20210111.xlsx;
+
 options nocenter errors = 1;
 %let wrds=wrds-cloud.wharton.upenn.edu 4016;
- options comamid=TCP remote=WRDS;
- signon username=_prompt_;
- libname outputr '/home/harvard/dmangoubi' server = wrds;
- libname workr slibref=work server=wrds;
- libname rcrspq slibref=crspq server=wrds;
- libname rcomp slibref = compd server = wrds;
+options comamid=TCP remote=WRDS;
+signon username=_prompt_;
+libname outputr '/home/harvard/dmangoubi' server = wrds;
+libname workr slibref=work server=wrds;
+libname rcrspq slibref=crspq server=wrds;
+libname rcomp slibref = compd server = wrds;
 run;
 quit;
+
 /* -------------------------------------------------------------------------------------------------------------------- */
 /*
 /* Program name: ws.sas
@@ -59,39 +63,113 @@ LIBNAME input 'input';
 LIBNAME input2 '/projects/harvard/mbaker/test';
 */
 LIBNAME output '/home/harvard/dmangoubi';
+
+/* CRSP CIZ -> SIZ conversion for monthly stock data */
+/* CRSP no long provides SIZE files for this data, see:  https://wrds-www.wharton.upenn.edu/pages/data-announcements/changes-to-crsp-data/ */
+/* Code below takes the CIZ files provided by CRSP and formats them to match the old SIZ file */
+%macro ciztosiz(freq = m, startdt = 01JAN1960, enddt = 31DEC2025, outds = ciz2siz_crsp_&freq.);
+%if &freq=D or &freq = d %then %do;
+    %let freq=d;
+    %let varfreq = dly;
+%end;
+%else %if &freq ne d %then %do;
+    %let freq=m;
+    %let varfreq = mth;
+%end;
+
+%let cizds = &freq.sf_v2;
+
+%put &cizds. &freq. &varfreq.;
+* dly version of the data does not include IssuerNm variable, need to add back;
+%if &freq = d %then %do;
+    proc sql;
+         create table &cizds. as select distinct a.*, b.IssuerNm
+         from crsp.&cizds. (where = (&varfreq.caldt >= "&startdt."d and &varfreq.caldt <= "&enddt."d)) as a
+         left join crsp.stkSecurityInfoHist as b
+         on a.permno = b.permno
+         and b.secInfoStartDt<= a.&varfreq.caldt <= b.secInfoEndDt
+        ;
+    quit;
+%end;
+%else %do;
+    data &cizds.;
+        set crsp.&cizds. (where = (&varfreq.caldt >= "&startdt."d and &varfreq.caldt <= "&enddt."d));
+    run;
+%end;
+
+data &outds.;
+    set &cizds.;
+    rename &varfreq.caldt = date
+           &varfreq.prevdt = prevdate
+           &varfreq.ret = ret
+           &varfreq.retx = retx
+           &varfreq.prc = prc
+           &varfreq.PrevPrc = prevprc
+           &varfreq.vol = vol
+           &varfreq.cap = mktcap
+           &varfreq.PrevCap = prevmktcap
+           &varfreq.cumfacpr = cfacpr
+           &varfreq.cumfacshr = cfacshr
+           cusip = ncusip
+           issuerNm = comnam;
+* create shrcd style variable;
+    if ShareType="NS" and SecurityType="EQTY" and SecuritySubType="COM" and USIncFlg="Y" and IssuerType='ACOR' then shrcd = 10;
+    else if ShareType="NS" and SecurityType="EQTY" and SecuritySubType="COM" and USIncFlg="Y" and IssuerType='CORP' then shrcd = 11;
+    else if ShareType="NS" and SecurityType="EQTY" and SecuritySubType="COM" and USIncFlg="N" and IssuerType='CORP' then shrcd = 12;
+    else if ShareType="NS" and SecurityType="FUND" and SecuritySubType="CEF" and USIncFlg="Y" and IssuerType='ACOR' then shrcd = 14;
+    else if ShareType="NS" and SecurityType="FUND" and SecuritySubType="CEF" and USIncFlg="N" and IssuerType='ACOR' then shrcd = 15;
+    else if ShareType="NS" and SecurityType="EQTY" and SecuritySubType="COM" and USIncFlg="Y" and IssuerType='REIT' then shrcd = 18;
+    else if ShareType='CE' and SecurityType='EQTY' and SecuritySubType='COM' and USIncFlg='Y' and IssuerType='ACOR' then shrcd = 20;
+    else if ShareType='CE' and SecurityType='EQTY' and SecuritySubType='COM' and USIncFlg='Y' and IssuerType='CORP' then shrcd = 21;
+    else if ShareType='NS' and SecurityType='DERV' and SecuritySubType='ATR' and USIncFlg='Y' and IssuerType='ACOR' then shrcd = 23;
+    else if ShareType='CE' and SecurityType='FUND' and SecuritySubType='CEF' and USIncFlg='Y' and IssuerType='ACOR' then shrcd = 24;
+    else if ShareType='AD' and SecurityType='EQTY' and SecuritySubType='COM' and USIncFlg='N' and IssuerType='ACOR' then shrcd = 30;
+    else if ShareType='AD' and SecurityType='EQTY' and SecuritySubType='COM' and USIncFlg='N' and IssuerType='CORP' then shrcd = 31;
+    else if ShareType='SB' and SecurityType='EQTY' and SecuritySubType='COM' and USIncFlg='Y' and IssuerType='ACOR' then shrcd = 40;
+    else if ShareType='SB' and SecurityType='EQTY' and SecuritySubType='COM' and USIncFlg='Y' and IssuerType='CORP' then shrcd = 41;
+    else if ShareType='SB' and SecurityType='EQTY' and SecuritySubType='COM' and USIncFlg='N' and IssuerType='CORP' then shrcd = 42;
+    else if ShareType='SB' and SecurityType='FUND' and SecuritySubType='CEF' and USIncFlg='Y' and IssuerType='ACOR' then shrcd = 44;
+    else if ShareType='SB' and SecurityType='EQTY' and SecuritySubType='COM' and USIncFlg='Y' and IssuerType='REIT' then shrcd = 48;
+    else if ShareType='UG' and SecurityType='EQTY' and SecuritySubType='COM' and USIncFlg='Y' and IssuerType='ACOR' then shrcd = 70;
+    else if ShareType='UG' and SecurityType='EQTY' and SecuritySubType='COM' and USIncFlg='Y' and IssuerType='CORP' then shrcd = 71;
+    else if ShareType='UG' and SecurityType='EQTY' and SecuritySubType='COM' and USIncFlg='N' and IssuerType='CORP' then shrcd = 72;
+    else if ShareType='NS' and SecurityType="FUND" and SecuritySubType="ETF" and USIncFlg="Y" and IssuerType='ACOR' then shrcd = 73;
+    else if ShareType='UG' and SecurityType='FUND' and SecuritySubType='ETV' and USIncFlg='Y' and IssuerType='ACOR' then shrcd = 74;
+    else shrcd = 75;
+* create exchcd style variable;
+    if primaryexch = 'N'      and conditionaltype = 'RW' and TradingStatusFlg = 'A' then exchcd = 1;
+    else if primaryexch = 'A' and conditionaltype = 'RW' and TradingStatusFlg = 'A' then exchcd = 2;
+    else if primaryexch = 'Q' and conditionaltype = 'RW' and TradingStatusFlg = 'A' then exchcd = 3;
+    else if primaryexch = 'R' and conditionaltype = 'RW' and TradingStatusFlg = 'A' then exchcd = 4;
+    else if primaryexch = 'B' and conditionaltype = 'RW' and TradingStatusFlg = 'A' then exchcd = 5;
+    else if primaryexch = 'I' and conditionaltype = 'RW' and TradingStatusFlg = 'A' then exchcd = 6;
+    else if primaryexch = 'N' and conditionaltype = 'RW' and TradingStatusFlg = 'H' then exchcd = -2;
+    else if primaryexch = 'A' and conditionaltype = 'RW' and TradingStatusFlg = 'H' then exchcd = -2;
+    else if primaryexch = 'Q' and conditionaltype = 'RW' and TradingStatusFlg = 'H' then exchcd = -2;
+    else if primaryexch = 'N' and conditionaltype = 'RW' and TradingStatusFlg = 'S' then exchcd = -1;
+    else if primaryexch = 'A' and conditionaltype = 'RW' and TradingStatusFlg = 'S' then exchcd = -1;
+    else if primaryexch = 'Q' and conditionaltype = 'RW' and TradingStatusFlg = 'S' then exchcd = -1;
+    else if primaryexch = 'N' and conditionaltype = 'NW' and TradingStatusFlg = 'A' then exchcd = 31;
+    else if primaryexch = 'N' and conditionaltype = 'WI' and TradingStatusFlg = 'A' then exchcd = 31;
+    else if primaryexch = 'A' and conditionaltype = 'NW' and TradingStatusFlg = 'A' then exchcd = 32;
+    else if primaryexch = 'Q' and conditionaltype = 'NW' and TradingStatusFlg = 'A' then exchcd = 33;
+    else if primaryexch = 'X' and conditionaltype = 'NT' then exchcd = 0;
+    else exchcd = 99;
+run;
+%mend ciztosiz;
+
+/* Build one monthly CRSP file that includes 2025 */
+%ciztosiz(freq = m, startdt = 01JAN1960, enddt = 31DEC2025, outds = work.msf_ciz);
 endrsubmit;
-rsubmit;
-/* -------------------------------------------------------------------------------------------------------------------- */
-/* A-1. Data checking macros
-/* -------------------------------------------------------------------------------------------------------------------- */
-
-* a. Basic contents ;
-
-%MACRO lookatdata (dbase);
-
-PROC CONTENTS DATA=&dbase; RUN;
-PROC PRINT DATA=&dbase(OBS=100); RUN;
-PROC MEANS DATA=&dbase; RUN;
-
-%MEND lookatdata;
-
-%lookatdata (compd.funda);
-%lookatdata (crspq.msf);
-%lookatdata (crspq.mse);
-%lookatdata (crspq.ccmxpf_linktable);
-endrsubmit;
-
-*%lookatdata (output.crspgibbs05);
 
 rsubmit;
-
 /* -------------------------------------------------------------------------------------------------------------------- */
 /* B-1. Prepare databases (CRSP Link, CRSP Codes, COMPUSTAT) to be merged
 /* -------------------------------------------------------------------------------------------------------------------- */
 
 * a. Create link table between CRSP and Compustat, rename to match Worldscope ;
 DATA crsp;
-	SET crspq.msf;
+	SET work.msf_ciz;
 	crspme = abs(prc*shrout);
 	KEEP permno date crspme;
 /*
@@ -155,10 +233,10 @@ rsubmit;
 * b. Create a dataset with company name and industry - could also be used for share code and exchange ;
 
 DATA crspdata;
-	SET crsp.mse;
+	SET work.msf_ciz;
 	IF shrcd~=. AND siccd~=. AND exchcd~=.;
 	year = year(date);
-	KEEP permno year date shrcd siccd exchcd comnam ticker;
+	KEEP permno year date shrcd siccd exchcd comnam;
 
 PROC SORT DATA=crspdata;
 	BY permno year;
@@ -171,17 +249,16 @@ DATA lastcrsp;
 	hsiccd = siccd;
 	hexchcd = exchcd;
 	hcomnam = comnam;
-	hticker = ticker;
-	KEEP permno hshrcd hsiccd hexchcd hcomnam hticker;
+	KEEP permno hshrcd hsiccd hexchcd hcomnam;
 
 DATA crspdata;
 	SET crspdata;
 	BY permno year date;
 	IF last.year;
-	KEEP permno year shrcd siccd exchcd comnam ticker;
+	KEEP permno year shrcd siccd exchcd comnam;
 
 DATA crsp;
-	SET crsp.msf;
+	SET work.msf_ciz;
 	year = year(date);
 	KEEP permno year;
 
@@ -205,14 +282,13 @@ rsubmit;
 DATA crspdata;
 	SET crspdata;
 	BY permno year;
-	RETAIN siccd1 shrcd1 exchcd1 comnam1 ticker1;
-	IF first.permno THEN DO; siccd1 = hsiccd; shrcd1 = hshrcd; exchcd1 = hexchcd; comnam1 = hcomnam; ticker1 = hticker; END;
+	RETAIN siccd1 shrcd1 exchcd1 comnam1;
+	IF first.permno THEN DO; siccd1 = hsiccd; shrcd1 = hshrcd; exchcd1 = hexchcd; comnam1 = hcomnam; END;
 	IF siccd~=. THEN siccd1 = siccd;
 	IF shrcd~=. THEN shrcd1 = shrcd;
 	IF exchcd~=. THEN exchcd1 = exchcd;
 	IF comnam~="" THEN comnam1 = comnam;
-	IF ticker~="" THEN ticker1 = ticker;
-	DROP siccd shrcd exchcd comnam ticker;
+	DROP siccd shrcd exchcd comnam;
 
 DATA output.codes;
 	SET crspdata;
@@ -220,7 +296,6 @@ DATA output.codes;
 	siccd = siccd1;
 	exchcd = exchcd1;
 	comnam = comnam1;
-	ticker = ticker1;
 	company = comnam;
 	KEEP permno year company siccd shrcd exchcd;
 
@@ -281,14 +356,13 @@ BY yrmo csyrmo gvkey a be me v payer;
 
 PROC MEANS;
 
-
 endrsubmit;
 
 rsubmit;
 * d. Set CRSP data, rename to match Worldscope ;
 
 DATA allreturn;
-	SET crspq.msf;
+	SET work.msf_ciz;
 	yrmo = year(date)*100+month(date);
 	year = year(date);
 	cap = abs(prc)*shrout;
@@ -318,10 +392,10 @@ DATA return;
 DATA world;
 	SET output.allworld;
 	KEEP gvkey csyrmo yrmo;
-
+	
 PROC SORT DATA=return;
 	BY gvkey yrmo;
-
+		
 PROC SORT DATA=world;
 	BY gvkey yrmo;
 
@@ -438,22 +512,26 @@ PROC PRINT DATA=output.premium;
 run;
 quit;
 endrsubmit;
+
 rsubmit;
 proc download data = output.premium
                out = work.premium;
 run;
 quit;
 endrsubmit;
+
 data work.premium;
  set work.premium;
- 	PDND = premium * 100;
+ PDND = premium * 100;
 run;
 quit;
+
 proc export data = work.premium
     outfile = "&premium."
 	dbms = xlsx replace;
 run;
 quit;
+
 rsubmit;
 * GET NYSE MARKET CAP *;
 proc download data = crspq.msia
@@ -461,10 +539,12 @@ proc download data = crspq.msia
 run;
 quit;
 endrsubmit;
+
 data work.msia;
  set work.msia (keep = caldt totval);
  caldty = put(caldt,yymmddn8.);
 run;
+
 proc export data = work.msia 
     outfile = "&msia."
 	dbms = xlsx replace;
@@ -475,12 +555,10 @@ quit;
 signoff wrds;
 run;
 quit;
-*
 
 /* -------------------------------------------------------------------------------------------------------------------- */
 * ENDSAS;
 /* -------------------------------------------------------------------------------------------------------------------- */
-
 
 /* -------------------------------------------------------------------------------------------------------------------- */
 * ENDSAS;
@@ -489,7 +567,7 @@ quit;
 * filename cees url "https://download.bls.gov/pub/time.series/ce/ce.data.00a.TotalNonfarm.Employment";
 
 * DATA ORIGINALLY FROM HERE: https://download.bls.gov/pub/time.series/ce/ce.data.00a.TotalNonfarm.Employment ;
-filename cees "C:\Users\dmangoubi\OneDrive - Harvard Business School\Daniel Projects\Sentiment Index\Data for 2025\SAS Input\CES_Data.txt";
+filename cees "C:\Users\dmangoubi\OneDrive - Harvard Business School\Daniel Projects\Sentiment Index\Data for 2026\SAS Input\CES_Data.txt";
 data work.cees;
 infile cees lrecl = 120 dlm = '09'x pad missover firstobs = 2;
   length Series $16
@@ -515,8 +593,9 @@ proc freq data = work.cees;
   tables series;
 run;
 quit;
+
 * DATA ORIGINALLY FROM HERE: http://download.bls.gov/pub/time.series/cu/cu.data.1.AllItems ;
-filename cusr "C:\Users\dmangoubi\OneDrive - Harvard Business School\Daniel Projects\Sentiment Index\Data for 2025\SAS Input\CUSR_Data.txt";
+filename cusr "C:\Users\dmangoubi\OneDrive - Harvard Business School\Daniel Projects\Sentiment Index\Data for 2026\SAS Input\CUSR_Data.txt";
 data work.cusr;
 infile cusr lrecl = 120 dlm = '09'x pad missover firstobs = 2;
   length Series $16
@@ -542,6 +621,7 @@ proc freq data = work.cusr;
   tables series;
 run;
 quit;
+
 data work.cees_cusr;
  merge work.cees
        work.cusr;
@@ -549,11 +629,13 @@ data work.cees_cusr;
  if year >= 1958;
 run;
 quit;
+
 proc export data = work.cees_cusr
     outfile = "&cees."
 	dbms = xlsx replace;
 	sheet = "EMPLOY_CPI";
 run;
 quit;
+
 data _null_;
 run;

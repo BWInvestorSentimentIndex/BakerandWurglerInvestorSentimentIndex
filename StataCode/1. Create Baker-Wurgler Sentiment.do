@@ -11,15 +11,16 @@ cap log close
 set more off
 
 * set your directory below
-local year 2025
+local year 2026
 local yearmin1 = `year'-1
 cd "C:\Users\dmangoubi\OneDrive - Harvard Business School\Daniel Projects\Sentiment Index\Data for `year'"
 
 
 * load the sentiment proxies dataset, and merge it with 
 * "macro_var.dta" that we created in "1. Download Macro Data.do"
-import excel "All sources for 2025.xlsx", sheet("Collected Data") first clear
+import excel "All sources for `year'.xlsx", sheet("Collected Data") first clear
 list in 505/510
+drop if mi(yearmo) 
 
 merge 1:1 yearmo using macro_var.dta
 assert _merge ==3

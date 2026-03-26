@@ -8,7 +8,7 @@ set more off
 
 * set your directory below
 //cd "~/Desktop/sentiment"
-local year 2025 //Update to CURRENT year
+local year 2026 //Update to CURRENT year
 local yearmin1 = `year'-1 
 local enddate `yearmin1'12
 

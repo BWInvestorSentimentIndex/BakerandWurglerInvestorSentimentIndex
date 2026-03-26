@@ -15,7 +15,7 @@ Data are generally as used and described in Baker and Wurgler, 'Investor Sentime
 All variable values are as of end of the indicated period
 201101+ raw data are as constructed by James Zeitler and Jennifer Beauregard of Harvard Business School
 202207+ raw data are as constructed by Dean Ryu and Daniel Mangoubi of Harvard Business School
-Data are subject to change if data improvements are available or revisions occur
+Data are subject to change if data improvements are available or revisions occur. 
 
 UNLIKE IN BAKER AND WURGLER (2006, 2007), NYSE TURNOVER HAS BEEN DROPPED AS ONE OF THE SIX SENTIMENT INDICATORS. THE SENTIMENT INDEX MAINTAINED NOW IS BASED ON FIVE INDICATORS.
 
