@@ -17,6 +17,7 @@ All variable values are as of end of the indicated period
 202207+ raw data are as constructed by Dean Ryu and Daniel Mangoubi of Harvard Business School
 Data are subject to change if data improvements are available or revisions occur. 
 
+![Data Notice](https://img.shields.io/badge/Data%20Note-CPI%20missing%20Oct%202025-red)
 No CPI Data for October 2025 was available due to a government shutdown. 
 (See: https://www.bls.gov/cpi/additional-resources/2025-federal-government-shutdown-impact-cpi.htm)
 
@@ -26,14 +27,9 @@ UNLIKE IN BAKER AND WURGLER (2006, 2007), NYSE TURNOVER HAS BEEN DROPPED AS ONE 
 DO NOT USE THESE SERIES FOR MEASURING CHANGES IN SENTIMENT (E.G. SENTIMENT(T)-SENTIMENT(T-1)) DUE TO LAG STRUCTURES, AMONG OTHER CONSIDERATIONS.  THESE ARE LOW-FREQUENCY LEVELS INDICATORS.
 
 
-<br>![Red Badge](https://img.shields.io/badge/Warning-Read%20Carefully-red)
-<br>**DO NOT REGARD THE DROP IN SENT_ORTH AROUND 202104 AS MEANINGFUL**
+<br>**Model for SENT_ORTH was updated in 2026 by Dean Ryu.**
 
-This is an artifact of the use of 12-month lagged macroeconomic data in the orthogonalization; some of these series drop suddenly and dramatically in 202003. No such jumps occurred when the methodology was originally set using annual data.
-We present the data as-is, but we suggest using SENT instead of SENT_ORTH for 202103-202107, since in all other times the series track each other so closely.  A more nuanced approach would base the orthogonalization on some exponentially weighted average of monthly values to ensure that distant lagged jumps in macro series do not induce such variation. 
-In any event, the user will want to confirm that any SENT_ORTH results are not dependent on these months.
-
-
+The SENT_ORTH index is constructed by aggregating market-based sentiment proxies and orthogonalizing these proxies with respect to a set of macroeconomic variables. In the original implementation, these macro variables were transformed into year-over year growth rates before entering the orthogonalization regressions. During the COVID-19 period, however, this transformation produced mechanically extreme values because the denominator of the year-over-year ratio corresponded to unusually depressed economic conditions in early 2020. The new model addresses this issue by revising the macro-processing procedure so that the sentiment orthogonalization is based off of deterending macro series rather than year-over-year differences.For more details see: (1) Create Baker-Wurgler Sentiment Index.do and (2) The BW INDEX DETEREND.pdf Memo, both of which are available on this repository.
 
 |||
 | ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -56,5 +52,7 @@ In any event, the user will want to confirm that any SENT_ORTH results are not d
 |consserv|Nominal services consumption; we provide monthly data here; the orthogonalized index uses growth in the real value over the t-12 real value   |
 |recess  |NBER recession indicator                                                                                                                      |
 |employ  |Employment; we provide monthly data here; the orthogonalized index uses growth over the t-12 value                                            |
-|cpi     |Consumer price index                                                                                                                          |
+|cpi     |Consumer price index (NOTE: CPI data is missing in Oct-2025 due to a government shut down.)                                                                             |
+
+
 
