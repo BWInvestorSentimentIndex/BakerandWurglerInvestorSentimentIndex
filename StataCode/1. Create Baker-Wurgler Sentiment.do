@@ -1,11 +1,25 @@
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-**# 0. README                                                                   *
+**# 0. README AND SET UP                                                                  *
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+
+*===============================================================================
+* NOTE ON UPDATE TO sentmo calculations:
+* Created by Dean Ryu — January 14, 2026
+*
+* This STATA code constructs the Baker–Wurgler (BW) investor sentiment index.
+* The orthogonalized version is constructed using detrended macro variables, 
+* rather than the original year-over-year growth-rate.
+*===============================================================================
+
 
 * this STATA code requires two datasets, 
 * "macro_var.dta" that you created through "1. Download Macro Data.do"; and 
 * "All sources for 2025.xlsx" that contains five sentiment proxies (hand-collected). Use Sheet 'Collected Data'
 
+
+
+
+* SET UP
 clear all
 cap log close
 set more off

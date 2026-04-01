@@ -8,7 +8,7 @@ Data are generally as used and described in Baker and Wurgler, 'Investor Sentime
 
 ## INVESTOR SENTIMENT DATA
 GENERAL NOTES
-UPDATED: May 31, 2024
+UPDATED: March 2026
 
 Data are generally as used and described in Baker and Wurgler, 'Investor Sentiment and the Cross-Section of Stock Returns,' Journal of Finance vol. 61, August 2006, p.1645-1680.
 
@@ -16,6 +16,9 @@ All variable values are as of end of the indicated period
 201101+ raw data are as constructed by James Zeitler and Jennifer Beauregard of Harvard Business School
 202207+ raw data are as constructed by Dean Ryu and Daniel Mangoubi of Harvard Business School
 Data are subject to change if data improvements are available or revisions occur. 
+
+No CPI Data for October 2025 was available due to a government shutdown. 
+(See: https://www.bls.gov/cpi/additional-resources/2025-federal-government-shutdown-impact-cpi.htm)
 
 UNLIKE IN BAKER AND WURGLER (2006, 2007), NYSE TURNOVER HAS BEEN DROPPED AS ONE OF THE SIX SENTIMENT INDICATORS. THE SENTIMENT INDEX MAINTAINED NOW IS BASED ON FIVE INDICATORS.
 

@@ -20,89 +20,87 @@ putexcel A1 = "INVESTOR SENTIMENT DATA"
 putexcel A1, bold
 
 putexcel A2 = "GENERAL NOTES"
-putexcel A3 = "UPDATED: May 31, `year'"
-
-putexcel A5 = "Data are generally as used and described in Baker and Wurgler, 'Investor Sentiment and the Cross-Section of Stock Returns,' Journal of Finance vol. 61, August 2006, p.1645-1680."
-
-putexcel B6 = "and Baker and Wurgler, 'Investor Sentiment in the Stock Market,' Journal of Economic Perspectives vol. 21(2), Spring 2007, p. 129-152."
-
-putexcel A7 = "All variable values are as of end of the indicated period"
-
-putexcel A8 = "201101+ raw data are as constructed by James Zeitler and Jennifer Beauregard of Harvard Business School"
-
-putexcel A9 = "202207+ raw data are as constructed by Dean Ryu and Daniel Mangoubi of Harvard Business School"
-
-putexcel A10 = "Data are subject to change if data improvements are available or revisions occur"
-
-putexcel A12 = "UNLIKE IN BAKER AND WURGLER (2006, 2007), NYSE TURNOVER HAS BEEN DROPPED AS ONE OF THE SIX SENTIMENT INDICATORS. THE SENTIMENT INDEX MAINTAINED NOW IS BASED ON FIVE INDICATORS."
-
-putexcel B13 = "Turnover does not mean what it once did, given the explosion of institutional high-frequency trading and the migration of trading to a variety of venues"
-
-putexcel A15 = "DO NOT USE THESE SERIES FOR MEASURING CHANGES IN SENTIMENT (E.G. SENTIMENT(T)-SENTIMENT(T-1)) DUE TO LAG STRUCTURES, AMONG OTHER CONSIDERATIONS.  THESE ARE LOW-FREQUENCY LEVELS INDICATORS."
-
-putexcel B16 = "See 2007 paper for a discussion of a changes-in-sentiment indicator"
-
-putexcel A18 = "DO NOT REGARD THE DROP IN SENT_ORTH AROUND 202104 AS MEANINGFUL"
-putexcel A18, font("", "", "red")
-putexcel A18, bold
-
-putexcel B19 = "This is an artifact of the use of 12-month lagged macroeconomic data in the orthogonalization; some of these series drop suddenly and dramatically in 202003. No such jumps occurred when the methodology was originally set using annual data."
-putexcel B19, bold
-putexcel B19, font("", "", "red")
-
-putexcel B20 = "We present the data as-is, but we suggest using SENT instead of SENT_ORTH for 202103-202107, since in all other times the series track each other so closely.  A more nuanced approach would base the orthogonalization on some exponentially weighted average of monthly values to ensure that distant lagged jumps in macro series do not induce such variation. "
-putexcel B20, font("", "", "red")
-putexcel B20, bold
-
-putexcel B21 = "In any event, the user will want to confirm that any SENT_ORTH results are not dependent on these months." 
-putexcel B21, font("", "", "red")
-putexcel B21, bold
-
-putexcel A23 = "SENT"
-putexcel A23, bold
-
-putexcel B23 = "Sentiment index in Baker and Wurgler (2006); updated version of Eq. (2) in that paper; based on first principal component of FIVE (standardized) sentiment proxies"
+putexcel A3 = "UPDATED: March, `year'"
+putexcel A4 = "Code, data, notes, and yearly updates are posted here: "
+putexcel B5 = "https://github.com/BWInvestorSentimentIndex/BakerandWurglerInvestorSentimentIndex"
 
 
-putexcel A24 = "SENT⊥"
-putexcel A24, bold
-putexcel B24 = "Sentiment index in Baker and Wurgler (2006); updated version of Eq. (3) in that paper; based on first principal component of FIVE (standardized) sentiment proxies where each of the proxies has first been orthogonalized with respect to a set of six macroeconomic indicators"
+putexcel A6 = "Data are generally as used and described in Baker and Wurgler, 'Investor Sentiment and the Cross-Section of Stock Returns,' Journal of Finance vol. 61, August 2006, p.1645-1680."
 
-putexcel A26 = "pdnd"
-putexcel B26 = "Value-weighted dividend premium defined following Baker and Wurgler (2004) (values differ slightly from there due to subsequent improvements in the CRSP/Compustat merge procedure). The indexes use the t-12 value.   (From SAS program divpremmonth_jaz_20210111.sas)"
+putexcel B7 = "and Baker and Wurgler, 'Investor Sentiment in the Stock Market,' Journal of Economic Perspectives vol. 21(2), Spring 2007, p. 129-152."
 
-putexcel A27 = "ripo"
-putexcel B27 = "First-day returns on IPOs from Ibbotson, Sindelar, and Ritter (1994) and updates (NIPO-weighted average of monthly RIPOs) from Jay Ritter's website. We provide monthly data here; the indexes use the nipo-weighted average over the prior twelve months to smooth noise, and then use the t-12 value of the result"
+putexcel A8 = "All variable values are as of end of the indicated period"
 
-putexcel A28 = "nipo"
-putexcel B28 = "IPO volume from Ibbotson, Sindelar, and Ritter (1994) and updates from Jay Ritter's website. We provide monthly data here; the indexes use the sum of nipo over the prior twelve months to smooth noise"
+putexcel A9 = "201101+ raw data are as constructed by James Zeitler and Jennifer Beauregard of Harvard Business School"
 
-putexcel A29 = "cefd"
-putexcel B29 = "Closed-end fund discount from Neal and Wheatley (1998) for 1934 to 1964 ('domestic stock funds'); Lakonishok, Shleifer, Vishny (1991) for 1965 to 1985 (general equity funds only); CDA/Wiesenberger for 1986; Herzfeld from 1987-2010; Morningstar from 2011. (unlevered general equity only) (equal-weighted)"
+putexcel A10 = "202207+ raw data are as constructed by Dean Ryu and Daniel Mangoubi of Harvard Business School"
 
-putexcel A30 = "s"
-putexcel B30 = "Equity share in new issues defined following Baker and Wurgler (2000), i.e., the total volume of equity issues over the prior twelve months divided by the total volume of equity and debt issues over the prior twelve months from Federal Reserve Bulletin"
+putexcel A11 = "Data are subject to change if data improvements are available or revisions occur"
 
-putexcel A32 = "indpro"
-putexcel B32 = "Industrial production index; we provide monthly data here; the orthogonalized index uses growth over the t-12 value"
+putexcel A13 = "UNLIKE IN BAKER AND WURGLER (2006, 2007), NYSE TURNOVER HAS BEEN DROPPED AS ONE OF THE SIX SENTIMENT INDICATORS. THE SENTIMENT INDEX MAINTAINED NOW IS BASED ON FIVE INDICATORS."
 
-putexcel A33 = "consdur"
-putexcel B33 = "Nominal durables consumption; we provide monthly data here; the orthogonalized index uses growth in the real value over the t-12 real value"
+putexcel B14 = "Turnover does not mean what it once did, given the explosion of institutional high-frequency trading and the migration of trading to a variety of venues"
 
-putexcel A34 = "consnon"
-putexcel B34 = "Nominal nondurables consumption; we provide monthly data here; the orthogonalized index uses growth in the real value over the t-12 real value"
+putexcel A16 = "DO NOT USE THESE SERIES FOR MEASURING CHANGES IN SENTIMENT (E.G. SENTIMENT(T)-SENTIMENT(T-1)) DUE TO LAG STRUCTURES, AMONG OTHER CONSIDERATIONS.  THESE ARE LOW-FREQUENCY LEVELS INDICATORS."
 
-putexcel A35 = "consserv"
-putexcel B35 = "Nominal services consumption; we provide monthly data here; the orthogonalized index uses growth in the real value over the t-12 real value"
+putexcel B17 = "See 2007 paper for a discussion of a changes-in-sentiment indicator"
 
-putexcel A36 = "recess"
-putexcel B36 = "NBER recession indicator"
+putexcel A19 = "Model for SENT_ORTH was updated in 2026 by Dean Ryu. "
+putexcel A19, bold
+putexcel A20 = "The SENT_ORTH index is constructed by aggregating market-based sentiment proxies and orthogonalizing these proxies with respect to a set of macroeconomic variables."
+putexcel A21 = "In the original implementation, these macro variables were transformed into year-over year growth rates before entering the orthogonalization regressions. During the COVID-19 period, however, this transformation produced mechanically extreme values because the denominator of the year-over-year ratio corresponded to unusually depressed economic conditions in early 2020."
+putexcel A22 = "The new model addresses this issue by revising the macro-processing procedure so that the sentiment orthogonalization is based off of deterending macro series rather than year-over-year differences."
+putexcel A23 = "For more details see: (1) Create Baker-Wurgler Sentiment Index.do and (2) The BW INDEX DETEREND.pdf Memo, both of which are available on the GitHub linked above. "
 
-putexcel A37 = "employ"
-putexcel B37 = "Employment; we provide monthly data here; the orthogonalized index uses growth over the t-12 value"
 
-putexcel A38 = "cpi"
-putexcel B38 = "Consumer price index"
+ 
+
+
+putexcel A25 = "SENT"
+putexcel B25 = "Sentiment index in Baker and Wurgler (2006); updated version of Eq. (2) in that paper; based on first principal component of FIVE (standardized) sentiment proxies"
+
+
+putexcel A26 = "SENT⊥"
+putexcel A26, bold
+putexcel B26 = "Sentiment index in Baker and Wurgler (2006); updated version of Eq. (3) in that paper; based on first principal component of FIVE (standardized) sentiment proxies where each of the proxies has first been orthogonalized with respect to a set of six macroeconomic indicators"
+
+putexcel A28 = "pdnd"
+putexcel B28 = "Value-weighted dividend premium defined following Baker and Wurgler (2004) (values differ slightly from there due to subsequent improvements in the CRSP/Compustat merge procedure). The indexes use the t-12 value.   (From SAS program divpremmonth_jaz_20210111.sas)"
+
+putexcel A29 = "ripo"
+putexcel B29 = "First-day returns on IPOs from Ibbotson, Sindelar, and Ritter (1994) and updates (NIPO-weighted average of monthly RIPOs) from Jay Ritter's website. We provide monthly data here; the indexes use the nipo-weighted average over the prior twelve months to smooth noise, and then use the t-12 value of the result"
+
+putexcel A30 = "nipo"
+putexcel B30 = "IPO volume from Ibbotson, Sindelar, and Ritter (1994) and updates from Jay Ritter's website. We provide monthly data here; the indexes use the sum of nipo over the prior twelve months to smooth noise"
+
+putexcel A31 = "cefd"
+putexcel B31 = "Closed-end fund discount from Neal and Wheatley (1998) for 1934 to 1964 ('domestic stock funds'); Lakonishok, Shleifer, Vishny (1991) for 1965 to 1985 (general equity funds only); CDA/Wiesenberger for 1986; Herzfeld from 1987-2010; Morningstar from 2011. (unlevered general equity only) (equal-weighted)"
+
+putexcel A32 = "s"
+putexcel B32 = "Equity share in new issues defined following Baker and Wurgler (2000), i.e., the total volume of equity issues over the prior twelve months divided by the total volume of equity and debt issues over the prior twelve months from Federal Reserve Bulletin"
+
+putexcel A34 = "indpro"
+putexcel B34 = "Industrial production index; we provide monthly data here; the orthogonalized index uses growth over the t-12 value"
+
+putexcel A35 = "consdur"
+putexcel B35 = "Nominal durables consumption; we provide monthly data here; the orthogonalized index uses growth in the real value over the t-12 real value"
+
+putexcel A36 = "consnon"
+putexcel B36 = "Nominal nondurables consumption; we provide monthly data here; the orthogonalized index uses growth in the real value over the t-12 real value"
+
+putexcel A37 = "consserv"
+putexcel B37 = "Nominal services consumption; we provide monthly data here; the orthogonalized index uses growth in the real value over the t-12 real value"
+
+putexcel A38 = "recess"
+putexcel B38 = "NBER recession indicator"
+
+putexcel A39 = "employ"
+putexcel B39 = "Employment; we provide monthly data here; the orthogonalized index uses growth over the t-12 value"
+
+putexcel A40 = "cpi"
+putexcel B40 = "Consumer price index"
+putexcel A41 = "Note: CPI data is missing in Oct-2025 due to a government shut down."
+
 
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 * 2. Create Sheet 2 (DATA)                                                    *
@@ -140,7 +138,7 @@ drop _merge
 ** same as 2-1, but user-specified command can go here, 
 ** such as highlighting specific rows with color
 
-putexcel set "SENTIMENT_`year'.xlsx", sheet("DATA") modify
+putexcel set "SENTIMENT.xlsx", sheet("DATA") modify
 
 putexcel A1 = "yearmo"
 putexcel B1 = "SENT"
@@ -166,7 +164,7 @@ qui forvalues i = 1/`=_N' {
 	
 	local row = `i' + 1 // increase by one since first row is header
     
-	** rows 760 - 764 are colored red
+	
 	if `row' >= 760 & `row' <=764 {
 		putexcel A`row' = yearmo[`i'] B`row' = SENT[`i'] C`row' = SENT_ORTH[`i'] D`row' = pdnd[`i'] E`row' = ripo[`i'] F`row' = nipo[`i'] G`row' = cefd[`i'] H`row' = s[`i'] I`row' = indpro[`i'] J`row' = consdur[`i'] K`row' = consnon[`i'] L`row' = consserv[`i'] M`row' = recess[`i'] N`row' = employ[`i'] O`row' = cpi[`i'] , font("", "", "red")
      }
