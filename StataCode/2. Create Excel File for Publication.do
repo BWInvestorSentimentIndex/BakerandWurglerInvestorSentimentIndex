@@ -138,7 +138,7 @@ drop _merge
 ** same as 2-1, but user-specified command can go here, 
 ** such as highlighting specific rows with color
 
-putexcel set "SENTIMENT.xlsx", sheet("DATA") modify
+putexcel set "SENTIMENT_`year'.xlsx", sheet("DATA") modify
 
 putexcel A1 = "yearmo"
 putexcel B1 = "SENT"
@@ -156,23 +156,13 @@ putexcel M1 = "recess"
 putexcel N1 = "employ"
 putexcel O1 = "cpi"
 
-** Loop through the data and write each cell
-** this will take longer than exporting the entire database, 
-** but comes with a handy setting to customize each cell
-
+** Print Data
 qui forvalues i = 1/`=_N' {
 	
 	local row = `i' + 1 // increase by one since first row is header
     
-	
-	if `row' >= 760 & `row' <=764 {
-		putexcel A`row' = yearmo[`i'] B`row' = SENT[`i'] C`row' = SENT_ORTH[`i'] D`row' = pdnd[`i'] E`row' = ripo[`i'] F`row' = nipo[`i'] G`row' = cefd[`i'] H`row' = s[`i'] I`row' = indpro[`i'] J`row' = consdur[`i'] K`row' = consnon[`i'] L`row' = consserv[`i'] M`row' = recess[`i'] N`row' = employ[`i'] O`row' = cpi[`i'] , font("", "", "red")
-     }
-     
-	** for all other rows, just print them in the sheet 
-	else {
 		putexcel A`row' = yearmo[`i'] B`row' = SENT[`i'] C`row' = SENT_ORTH[`i'] D`row' = pdnd[`i'] E`row' = ripo[`i'] F`row' = nipo[`i'] G`row' = cefd[`i'] H`row' = s[`i'] I`row' = indpro[`i'] J`row' = consdur[`i'] K`row' = consnon[`i'] L`row' = consserv[`i'] M`row' = recess[`i'] N`row' = employ[`i'] O`row' = cpi[`i']
 		}
-}
+
 
 
