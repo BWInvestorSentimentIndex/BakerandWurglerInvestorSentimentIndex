@@ -1,0 +1,8 @@
+{
+  "bundle": "t002_bls_employ_cpi",
+  "source_file": "PDND/divpremmonth.sas",
+  "source_blob_sha": "2f116efcbf2a855fbef9f27812a773753bb820b2",
+  "source_commit": "7a0165f324f06a0f88aafc253de18c63431d2a9d",
+  "tier": "real_data",
+  "notes": "Repo's BLS ingestion (lines 570-638): tab-delimited INFILE of CES total nonfarm employment + CUSR all-items CPI, MMM->month parse, series filters (=: and =), year/mm merge, PROC FREQ checks. Hardcoded Windows file paths rewritten to inline DATALINES (one year of monthly sample obs); reader/filter/merge logic verbatim."
+}

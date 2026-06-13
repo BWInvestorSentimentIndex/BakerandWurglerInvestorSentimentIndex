@@ -1,0 +1,8 @@
+{
+  "bundle": "t003_dividend_premium",
+  "source_file": "PDND/divpremmonth.sas",
+  "source_blob_sha": "2f116efcbf2a855fbef9f27812a773753bb820b2",
+  "source_commit": "7a0165f324f06a0f88aafc253de18c63431d2a9d",
+  "tier": "real_data",
+  "notes": "Repo's dividend-premium (PDND) calculation (lines 474-526): PROC MEANS BY yrmo payer (SUM/N), payer/nonpayer split, premium=log(pvwmb)-log(npvwmb), PDND=premium*100. The value-weighted dividend premium proxy from the README. Mock 'combined' firm-month panel (18 obs, 3 months) supplies the post-merge inputs; the calculation runs verbatim."
+}

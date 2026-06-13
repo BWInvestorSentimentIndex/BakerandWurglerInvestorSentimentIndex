@@ -1,0 +1,8 @@
+{
+  "bundle": "t001_ciztosiz_crsp",
+  "source_file": "PDND/divpremmonth.sas",
+  "source_blob_sha": "2f116efcbf2a855fbef9f27812a773753bb820b2",
+  "source_commit": "7a0165f324f06a0f88aafc253de18c63431d2a9d",
+  "tier": "real_data",
+  "notes": "Repo's %ciztosiz macro (CRSP CIZ->SIZ conversion: derives SHRCD/EXCHCD classification). Monthly-frequency call as in the program. Mock crsp.msf_v2 (10 rows) supplies the columns the macro reads; classification logic and the line-162 call run verbatim."
+}

@@ -1,0 +1,20 @@
+{
+  "_captured_at": "2026-06-13T09:29:51Z",
+  "_captured_run_id": "r_019ec0509f027f72a47cff678647874d",
+  "status": "ok",
+  "exit_code": 0,
+  "log_contains": [
+    "NOTE: Wrote work.cees (12 rows, 5 columns).",
+    "NOTE: Wrote work.cusr (12 rows, 5 columns).",
+    "NOTE: Wrote work.cees_cusr (12 rows, 6 columns).",
+    "NOTE: PROC PRINT completed: 12 observations printed, 4 variables"
+  ],
+  "log_does_not_contain": [
+    "ERROR:",
+    "[JENNER-ERROR"
+  ],
+  "diagnostics": {
+    "parse_warnings": [],
+    "runtime_warnings": []
+  }
+}
