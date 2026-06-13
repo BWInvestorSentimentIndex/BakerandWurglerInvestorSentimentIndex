@@ -1,0 +1,20 @@
+{
+  "_captured_at": "2026-06-13T09:28:05Z",
+  "_captured_run_id": "r_019ec04edc9c7690927f543dcf03a776",
+  "status": "ok",
+  "exit_code": 0,
+  "log_contains": [
+    "NOTE: Wrote crsp.msf_v2 (10 rows, 22 columns).",
+    "NOTE: Read 10 rows from crsp.msf_v2.",
+    "NOTE: Wrote work.msf_ciz (10 rows, 24 columns).",
+    "NOTE: PROC PRINT completed: 10 observations printed, 6 variables"
+  ],
+  "log_does_not_contain": [
+    "ERROR:",
+    "[JENNER-ERROR"
+  ],
+  "diagnostics": {
+    "parse_warnings": [],
+    "runtime_warnings": []
+  }
+}

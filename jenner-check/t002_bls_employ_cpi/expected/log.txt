@@ -1,0 +1,40 @@
+Jenner 0.1.0 (Unlicensed - limited to 100 observations)
+Get a license at https://jenneranalytics.com/license
+
+NOTE: Option OBS changed to 100.
+NOTE: DATA work.cees
+
+NOTE: Processing inline DATALINES (14 lines)
+
+NOTE: Read 13 rows from DATALINES.
+NOTE: Wrote work.cees (12 rows, 5 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: PROC FREQ
+NOTE: ODS plot written: freq_series.spec.json
+NOTE: PROC FREQ statement used.
+NOTE: DATA work.cusr
+
+NOTE: Processing inline DATALINES (14 lines)
+
+NOTE: Read 13 rows from DATALINES.
+NOTE: Wrote work.cusr (12 rows, 5 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: PROC FREQ
+NOTE: ODS plot written: freq_series.spec.json
+NOTE: PROC FREQ statement used.
+NOTE: DATA work.cees_cusr
+
+NOTE: Stream 1 processed 12 rows, max BY-group size: 1 (O(1) memory verified)
+NOTE: Stream 2 processed 12 rows, max BY-group size: 1 (O(1) memory verified)
+
+NOTE: Wrote work.cees_cusr (12 rows, 6 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: PROC PRINT data=work.cees_cusr
+
+NOTE: PROC PRINT completed: 12 observations printed, 4 variables

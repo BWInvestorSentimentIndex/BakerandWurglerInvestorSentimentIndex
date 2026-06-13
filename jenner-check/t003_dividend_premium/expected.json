@@ -1,0 +1,20 @@
+{
+  "_captured_at": "2026-06-13T09:30:55Z",
+  "_captured_run_id": "r_019ec05199837152b30c053bb355e098",
+  "status": "ok",
+  "exit_code": 0,
+  "log_contains": [
+    "NOTE: Output dataset mb has 6 observations and 8 variables.",
+    "NOTE: Wrote mbpayer (3 rows, 8 columns).",
+    "NOTE: Wrote mbnonpayer (3 rows, 8 columns).",
+    "NOTE: PROC PRINT completed: 3 observations printed, 5 variables"
+  ],
+  "log_does_not_contain": [
+    "ERROR:",
+    "[JENNER-ERROR"
+  ],
+  "diagnostics": {
+    "parse_warnings": [],
+    "runtime_warnings": []
+  }
+}
